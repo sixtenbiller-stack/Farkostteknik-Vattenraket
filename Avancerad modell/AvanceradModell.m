@@ -18,3 +18,7 @@ y0 = [0;0;0;0;vattenVolym;flaskTryck];
 tspan = [0,5];
 
 [t,resultat] = ode45(@(t,y) Solver(t,y,munstycksArea, cd, rhoVatten, atmTryck, flaskVolym, torrMassa, cdLuft, projektionsArea, startVinkel), tspan, y0);
+plot(resultat(:,1), resultat(:,2));
+
+axis equal;
+grid on;
