@@ -1,4 +1,4 @@
-git clear all;
+clear all;
 close all;
 
 Matningar = 100;
