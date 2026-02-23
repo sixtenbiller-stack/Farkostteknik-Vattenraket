@@ -1,7 +1,7 @@
-clear all;
+git clear all;
 close all;
 
-Matningar = 200;
+Matningar = 100;
 
 flaskVolym = 1.5/1000;
 projektionsArea = ((0.0881/2)^2)*pi;
