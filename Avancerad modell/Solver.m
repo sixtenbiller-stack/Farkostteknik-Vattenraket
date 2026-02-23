@@ -10,7 +10,7 @@ function dydt = Solver(t,y,munstycksArea,cd,rhoVatten,atmTryck,flaskVolym,torrMa
 
     v = sqrt(vx^2 + vy^2);
     
-    if round(v) < 1
+    if v < 0.1
         ex = cos(startVinkel);
         ey = sin(startVinkel);
     else
@@ -22,7 +22,7 @@ function dydt = Solver(t,y,munstycksArea,cd,rhoVatten,atmTryck,flaskVolym,torrMa
     
     dragKraft = (1/2)*1.2*(v^2)*cdLuft*projektionsArea;
 
-    if vv > 0
+    if vv > 0 && p > atmTryck
         dmdt = munstycksArea*cd*sqrt(2*rhoVatten*(p-atmTryck));
         vattenHastighet = dmdt/(rhoVatten*munstycksArea);
         motorKraft = dmdt * vattenHastighet;
