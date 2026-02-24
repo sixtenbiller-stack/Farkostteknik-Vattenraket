@@ -1,7 +1,11 @@
+%Detta script är en kopia/utbyggnad av AvanceradModell.m
+%med funktionalitet för att plotta uppskjutningsvinkel
+%och vattenmängd mot horisontellt uppnådd längd.
+
 clear all;
 close all;
 
-Matningar = 100;
+Matningar = 100; %Antalet olika vinklar och vattenmängder som provas
 
 flaskVolym = 1.5/1000;
 projektionsArea = ((0.0881/2)^2)*pi;
@@ -19,16 +23,25 @@ resultatmatris = zeros(Matningar);
 
 x = 1;
 y = 1;
+
+%Itererar genom vinklar och vattenmängder och lagrar resultaten i
+%resultatmatris
 for vinkel = startVinkel
     for vatten = vattenVolym
         y0 = [0;0;0;0;vatten;flaskTryck];
         tspan = [0,5];
+        %Själva solvern (löser diff ekvationerna)
         [t,resultat] = ode45(@(t,y) Solver(t,y,munstycksArea, cd, rhoVatten, atmTryck, flaskVolym, torrMassa, cdLuft, projektionsArea, vinkel), tspan, y0);
         
+        %Hittar indexet för maxhöjd under färden i syfte
+        %att man ska kunna hitta när den träffar marken
+        %efter maxhöjden (annars returnerar den startpositionen)
         [~,indexMaxh] = max(resultat(:,2));
 
+        %Hittar var raketen träffar marken
         [~, relIndex] = min(abs(resultat(indexMaxh:end, 2)));
 
+        %Lägger ihop offsetarna för att få mätpunkter sedan start
         indexMarken = relIndex + indexMaxh - 1;
         xvarde = resultat(indexMarken,1)
         resultatmatris(x,y) = xvarde;
@@ -38,16 +51,17 @@ for vinkel = startVinkel
     x = x+1;
 end
 
+
+%Delar upp mtävärdena för att kunna göra en surf
 [VattenGrid, VinkelGrid] = meshgrid(vattenVolym, startVinkel);
 
-% Plotta ytan med de faktiska fysikaliska värdena
 surf(VattenGrid, VinkelGrid, resultatmatris);
 
-% Formatera axlarna med rätt enheter
 xlabel('Vattenvolym (m^3)');
 ylabel('Startvinkel (rad)');
 zlabel('Horisontellt avstånd (m)');
 
+%För att surfen ska se ut som en kub, med lika skalor
 pbaspect([1 1 1]);
 
 grid on;
