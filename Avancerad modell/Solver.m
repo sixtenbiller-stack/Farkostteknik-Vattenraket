@@ -11,6 +11,8 @@ function dydt = Solver(t,y,munstycksArea,cd,rhoVatten,atmTryck,flaskVolym,torrMa
     p = y(6); %Flasktryck
     
     g = 9.81;
+    
+    rho_luft = 1.225; 
 
     v = sqrt(vx^2 + vy^2);
     
@@ -28,9 +30,7 @@ function dydt = Solver(t,y,munstycksArea,cd,rhoVatten,atmTryck,flaskVolym,torrMa
 
     %Räknar momentär tot. massa
     m = torrMassa + vv*rhoVatten;
-    
-    %Nasa drag equation
-    dragKraft = (1/2)*1.2*(v^2)*cdLuft*projektionsArea;
+   
 
     %Kontrollerar om det finns vatten kvar i flaskan samt om trycket
     %är högre än det atmosfäriska trycket utanför flaskan
@@ -47,12 +47,30 @@ function dydt = Solver(t,y,munstycksArea,cd,rhoVatten,atmTryck,flaskVolym,torrMa
         %Förändringen i tryck beroende på vatten-volymens förändring
         dpdt = (p/luftVolym)*dvvdt; 
     
+    %elseif vv <= 0 && p > atmTryck % Om vattnet är slut men det finns lufttryck kvar
+       
+       % gamma = 1.4;
+        %pan = atmTryck;
+        
+      % Motorkraft med kompressibel vätska (luften)
+      %  motorKraft = munstycksArea * (2 * gamma / (gamma - 1)) * (p^((gamma-1)/gamma) - pan^((gamma-1)/gamma)) * pan^(1/gamma);
+                     
+       % dvvdt = 0;
+
+      %  p_a0 = 700000; %Tryck vid start
+      %  T_a0 = 293.15; %Temperatur vid start i kelvin
+       % rho_a0 = p_a0 / (287.05 * T_a0); %Luftens densitet enligt allmäna gaslagen
+        
+       % dpdt = -(munstycksArea / flaskVolym) * (2 * gamma / (gamma - 1))^(1/2) * (p_a0^(1/gamma) / rho_a0)^(1/2) * p^((gamma-1)/gamma) * pan^(1/gamma) * (p^((gamma-1)/gamma) - pan^((gamma-1)/gamma))^(1/2)
     else %Om vattnet i flaskan är slut eller det atmosfäriska trycket
          %blir högre än flasktrycket
         motorKraft = 0;
         dvvdt = 0;
         dpdt = 0;
     end
+
+    %Nasa drag equation
+    dragKraft = (1/2)*1.2*(v^2)*cdLuft*projektionsArea;
 
     %Räknar de slutgiltiga accelerationerna
     ftot = motorKraft - dragKraft;
