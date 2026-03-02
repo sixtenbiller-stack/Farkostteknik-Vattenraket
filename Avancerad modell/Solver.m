@@ -51,7 +51,6 @@ function dydt = Solver(t,y,munstycksArea,cd,rhoVatten,atmTryck,flaskVolym,torrMa
        
        % gamma = 1.4;
         %pan = atmTryck;
-        
       % Motorkraft med kompressibel vätska (luften)
       %  motorKraft = munstycksArea * (2 * gamma / (gamma - 1)) * (p^((gamma-1)/gamma) - pan^((gamma-1)/gamma)) * pan^(1/gamma);
                      

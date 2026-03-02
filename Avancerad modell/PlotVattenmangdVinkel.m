@@ -5,7 +5,7 @@
 clear all;
 close all;
 
-Matningar = 100; %Antalet olika vinklar och vattenmängder som provas
+Matningar = 50; %Antalet olika vinklar och vattenmängder som provas
 
 flaskVolym = 1.5/1000;
 projektionsArea = ((0.0881/2)^2)*pi;
@@ -18,6 +18,8 @@ rhoVatten = 1000;
 cdLuft = 0.75;
 cd = 0.98;
 startVinkel = 0:((pi/2)/Matningar):pi/2;
+startTemp = 293.15;
+
 
 resultatmatris = zeros(Matningar);
 
@@ -31,7 +33,7 @@ for vinkel = startVinkel
         y0 = [0;0;0;0;vatten;flaskTryck];
         tspan = [0,5];
         %Själva solvern (löser diff ekvationerna)
-        [t,resultat] = ode45(@(t,y) Solver(t,y,munstycksArea, cd, rhoVatten, atmTryck, flaskVolym, torrMassa, cdLuft, projektionsArea, vinkel), tspan, y0);
+        [t,resultat] = solverController(munstycksArea,cd,rhoVatten,atmTryck,flaskVolym,torrMassa,cdLuft,projektionsArea,vinkel,startTemp, flaskTryck, tspan, vatten);
         
         %Hittar indexet för maxhöjd under färden i syfte
         %att man ska kunna hitta när den träffar marken
@@ -43,7 +45,7 @@ for vinkel = startVinkel
 
         %Lägger ihop offsetarna för att få mätpunkter sedan start
         indexMarken = relIndex + indexMaxh - 1;
-        xvarde = resultat(indexMarken,1)
+        xvarde = resultat(indexMarken,1);
         resultatmatris(x,y) = xvarde;
         y = y+1;
     end
