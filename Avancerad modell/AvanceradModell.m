@@ -5,15 +5,15 @@ close all;
 
 flaskVolym = 1.5/1000;
 projektionsArea = ((0.0881/2)^2)*pi;
-torrMassa = 0.107;
+torrMassa = 0.207;
 munstycksArea = ((0.0205/2)^2)*pi;
 flaskTryck = 7*100000;
 atmTryck = 1 * 100000;
-vattenVolym = 0.5/1000;
+vattenVolym = 0.56/1000;
 rhoVatten = 1000;
-cdLuft = 0.75;
+cdLuft = 0.5;
 cd = 0.98;
-startVinkel = pi/4;
+startVinkel = 42*pi/180;
 startTemp = 293.15;
 
 tspan = [0,5];
